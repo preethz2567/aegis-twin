@@ -11,7 +11,7 @@ const NODE_COLORS = {
   'default': '#8b949e'
 };
 
-const TwinGraph = () => {
+const TwinGraph = ({ attackPath }) => {
   const svgRef = useRef(null);
   const containerRef = useRef(null);
   const [status, setStatus] = useState('loading');
@@ -155,6 +155,42 @@ const TwinGraph = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (status !== 'ready' || !svgRef.current) return;
+    
+    const svg = d3.select(svgRef.current);
+    
+    if (!attackPath || attackPath.length === 0) {
+      svg.selectAll('.node-circle').classed('node-dimmed node-highlighted', false);
+      svg.selectAll('line').classed('edge-dimmed edge-highlighted', false);
+      return;
+    }
+    
+    svg.selectAll('.node-circle').classed('node-dimmed', true);
+    svg.selectAll('line').classed('edge-dimmed', true);
+    
+    const pathSet = new Set(attackPath);
+    
+    svg.selectAll('.node-circle')
+      .filter(d => pathSet.has(d.id))
+      .classed('node-dimmed', false)
+      .classed('node-highlighted', true);
+      
+    svg.selectAll('line')
+      .filter(d => {
+        for (let i = 0; i < attackPath.length - 1; i++) {
+          if ((d.source.id === attackPath[i] && d.target.id === attackPath[i+1]) ||
+              (d.target.id === attackPath[i] && d.source.id === attackPath[i+1])) {
+            return true;
+          }
+        }
+        return false;
+      })
+      .classed('edge-dimmed', false)
+      .classed('edge-highlighted', true);
+      
+  }, [attackPath, status]);
 
   return (
     <div className="graph-container" ref={containerRef}>

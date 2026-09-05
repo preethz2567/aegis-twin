@@ -146,3 +146,177 @@ body {
   stroke-width: 3px;
   filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.6));
 }
+
+/* App Header modifications */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.simulate-btn {
+  background-color: var(--accent);
+  color: #000;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: opacity 0.2s;
+}
+
+.simulate-btn:hover {
+  opacity: 0.9;
+}
+
+.simulate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0,0,0,0.3);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-text {
+  color: #f85149;
+  font-size: 0.9rem;
+}
+
+/* Attack Path Panel */
+.attack-path-panel {
+  width: 320px;
+  background-color: var(--panel-bg);
+  border-left: 1px solid var(--border-color);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: -4px 0 15px rgba(0,0,0,0.3);
+  z-index: 5;
+}
+
+.attack-path-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+}
+
+.risk-score-container {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+}
+
+.risk-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.risk-value {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.hops-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.hop-item {
+  background: #21262d;
+  border: 1px solid var(--border-color);
+  padding: 0.75rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hop-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.hop-type {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.hop-badge {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+
+.hop-badge.entry {
+  background: rgba(63, 185, 80, 0.2);
+  color: #3fb950;
+  border: 1px solid rgba(63, 185, 80, 0.4);
+}
+
+.hop-badge.target {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.4);
+}
+
+.hop-arrow {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 0.5rem 0;
+  font-size: 1.2rem;
+}
+
+/* D3 highlight classes */
+.node-dimmed {
+  opacity: 0.3;
+}
+.edge-dimmed {
+  stroke-opacity: 0.05 !important;
+}
+.node-highlighted {
+  stroke: #ff7b72 !important;
+  stroke-width: 4px !important;
+  filter: drop-shadow(0 0 10px rgba(255, 123, 114, 0.8));
+  opacity: 1 !important;
+}
+.edge-highlighted {
+  stroke: #ff7b72 !important;
+  stroke-width: 3px !important;
+  stroke-opacity: 0.9 !important;
+  filter: drop-shadow(0 0 5px rgba(255, 123, 114, 0.5));
+}
