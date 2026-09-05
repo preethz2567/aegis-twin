@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FixRecommendationsPanel = ({ data }) => {
+const FixRecommendationsPanel = ({ data, onApplyFix, isApplying }) => {
   const { optimization } = data;
   
   if (!optimization) return null;
@@ -62,6 +62,15 @@ const FixRecommendationsPanel = ({ data }) => {
                   {fix.reasoning_tag === 'path_chokepoint' && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>}
                 </span>
               )}
+            </div>
+            <div className="fix-actions" style={{ marginTop: '0.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '0.5rem' }}>
+              <button 
+                className="apply-btn" 
+                onClick={() => onApplyFix(fix.node_id)}
+                disabled={isApplying}
+              >
+                Apply Fix
+              </button>
             </div>
           </div>
         ))}

@@ -6,12 +6,16 @@ class TwinGraph:
     def __init__(self, data_path: str = None):
         if data_path is None:
             base_dir = os.path.dirname(os.path.abspath(__file__))
-            data_path = os.path.join(base_dir, 'data', 'network.json')
+            self.data_path = os.path.join(base_dir, 'data', 'network.json')
+        else:
+            self.data_path = data_path
             
+        self.fixed_nodes = set()
         self.graph = nx.DiGraph()
-        self.load_data(data_path)
+        self.load_data(self.data_path)
 
     def load_data(self, data_path: str):
+        self.graph.clear()
         with open(data_path, 'r') as f:
             data = json.load(f)
             
@@ -37,10 +41,22 @@ class TwinGraph:
             target = edge.pop('target')
             self.graph.add_edge(source, target, **edge)
 
+    def apply_fix(self, node_id: str):
+        if node_id in self.graph.nodes:
+            self.fixed_nodes.add(node_id)
+            self.graph.nodes[node_id]['cves'] = []
+            self.graph.nodes[node_id]['technique_risk_score'] = 0.0
+            for u, v, data in self.graph.in_edges(node_id, data=True):
+                data['risk_weight'] = 0.0
+
+    def reset_fixes(self):
+        self.fixed_nodes.clear()
+        self.load_data(self.data_path)
+
     def get_graph_state(self):
         nodes = []
         for n, attrs in self.graph.nodes(data=True):
-            node_data = {'id': n}
+            node_data = {'id': n, 'is_fixed': n in self.fixed_nodes}
             node_data.update(attrs)
             nodes.append(node_data)
             

@@ -11,7 +11,7 @@ const NODE_COLORS = {
   'default': '#4A5568'
 };
 
-const TwinGraph = ({ attackPath, recommendedFixes }) => {
+const TwinGraph = ({ attackPath, recommendedFixes, refreshTrigger }) => {
   const svgRef = useRef(null);
   const containerRef = useRef(null);
   const [status, setStatus] = useState('loading');
@@ -102,7 +102,19 @@ const TwinGraph = ({ attackPath, recommendedFixes }) => {
       node.append('circle')
         .attr('r', d => d.radius)
         .attr('fill', d => NODE_COLORS[d.type] || NODE_COLORS['default'])
-        .attr('class', d => d.crown_jewel ? 'node-circle node-crown-jewel' : 'node-circle');
+        .attr('class', d => d.crown_jewel ? 'node-circle node-crown-jewel' : 'node-circle')
+        .classed('node-is-fixed', d => d.is_fixed);
+
+      // Initial checkmarks
+      node.filter(d => d.is_fixed).append('text')
+        .attr('class', 'fixed-icon')
+        .attr('text-anchor', 'middle')
+        .attr('dy', '4')
+        .style('fill', '#3E8E8A')
+        .style('font-weight', 'bold')
+        .style('font-size', '16px')
+        .style('pointer-events', 'none')
+        .text('✓');
 
       // Node labels
       node.append('text')
@@ -156,6 +168,43 @@ const TwinGraph = ({ attackPath, recommendedFixes }) => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (status !== 'ready' || !svgRef.current || refreshTrigger === 0) return;
+    
+    fetchTwinState().then(data => {
+      const fixedSet = new Set(data.nodes.filter(n => n.is_fixed).map(n => n.id));
+      const svg = d3.select(svgRef.current);
+      
+      svg.selectAll('.node-group').each(function(d) {
+        const isFixed = fixedSet.has(d.id);
+        d.is_fixed = isFixed;
+        
+        const group = d3.select(this);
+        group.select('.node-circle').classed('node-is-fixed', isFixed);
+        
+        if (isFixed && group.select('.fixed-icon').empty()) {
+           group.append('text')
+             .attr('class', 'fixed-icon')
+             .attr('text-anchor', 'middle')
+             .attr('dy', '4')
+             .style('fill', '#3E8E8A')
+             .style('font-weight', 'bold')
+             .style('font-size', '16px')
+             .style('pointer-events', 'none')
+             .text('✓')
+             .style('opacity', 0)
+             .transition().duration(750)
+             .style('opacity', 1);
+        } else if (!isFixed) {
+           group.select('.fixed-icon')
+             .transition().duration(300)
+             .style('opacity', 0)
+             .remove();
+        }
+      });
+    }).catch(err => console.error(err));
+  }, [refreshTrigger, status]);
 
   useEffect(() => {
     if (status !== 'ready' || !svgRef.current) return;

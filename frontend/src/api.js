@@ -29,3 +29,27 @@ export const fetchExplain = async () => {
   }
   return response.json();
 };
+
+export const applyFix = async (nodeId) => {
+  const response = await fetch('http://localhost:8000/api/apply-fix', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ node_id: nodeId }),
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
+export const resetSimulation = async () => {
+  const response = await fetch('http://localhost:8000/api/reset-simulation', {
+    method: 'POST',
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
