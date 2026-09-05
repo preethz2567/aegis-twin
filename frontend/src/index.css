@@ -218,6 +218,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  max-height: calc(100vh - 150px);
   box-shadow: -4px 0 15px rgba(0,0,0,0.3);
   z-index: 5;
 }
@@ -337,6 +338,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  max-height: calc(100vh - 150px);
   box-shadow: -4px 0 15px rgba(0,0,0,0.3);
   z-index: 5;
 }
@@ -515,6 +517,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  max-height: calc(100vh - 150px);
   box-shadow: -4px 0 15px rgba(0,0,0,0.3);
   z-index: 5;
 }
