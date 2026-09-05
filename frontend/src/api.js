@@ -53,3 +53,21 @@ export const resetSimulation = async () => {
   }
   return response.json();
 };
+
+export const generateReport = async (attackPath, optimization, explanation) => {
+  const response = await fetch('http://localhost:8000/api/generate-report', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      attack_path: attackPath,
+      optimization: optimization,
+      explanation: explanation || '',
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.blob();
+};

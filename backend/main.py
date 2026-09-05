@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from pydantic import BaseModel
+from typing import Optional, Any
 from twin import TwinGraph
 from attacker_agent import find_highest_risk_path
 from optimizer import recommend_fixes
@@ -22,6 +24,11 @@ def startup_event():
 
 class FixRequest(BaseModel):
     node_id: str
+
+class ReportRequest(BaseModel):
+    attack_path: dict
+    optimization: dict
+    explanation: Optional[str] = None
 
 app.add_middleware(
     CORSMiddleware,
@@ -79,3 +86,19 @@ def apply_fix(request: FixRequest):
 def reset_simulation():
     twin_graph.reset_fixes()
     return {"status": "success"}
+
+@app.post("/api/generate-report")
+def generate_report(request: ReportRequest):
+    from report import generate_pdf_report
+    from datetime import datetime
+    pdf_bytes = generate_pdf_report(
+        request.attack_path,
+        request.optimization,
+        request.explanation or ""
+    )
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="aegis-twin-report-{ts}.pdf"'}
+    )

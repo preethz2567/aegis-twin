@@ -4,3 +4,5 @@ networkx
 pydantic
 anthropic
 python-dotenv
+reportlab
+requests

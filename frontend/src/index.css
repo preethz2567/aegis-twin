@@ -188,6 +188,56 @@ body {
   cursor: not-allowed;
 }
 
+.report-btn {
+  background-color: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 0.65rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.report-btn:hover {
+  background-color: var(--accent);
+  color: #000;
+}
+
+.report-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.success-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 2rem;
+  border: 1px solid #10B981;
+  margin: 2rem;
+  color: #10B981;
+  text-align: center;
+}
+
+.success-banner h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #10B981;
+  margin: 0;
+}
+
+.success-banner p {
+  color: var(--text-muted);
+  margin: 0;
+}
+
 .spinner {
   width: 16px;
   height: 16px;
