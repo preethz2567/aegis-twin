@@ -8,7 +8,7 @@ load_dotenv()
 def generate_explanation(attack_path_result: dict, fix_recommendations: dict) -> str:
     api_key = os.getenv("ANTHROPIC_API_KEY")
     if not api_key or api_key == "your_key_here":
-        return "Explanation generation is temporarily unavailable — see the technical breakdown above."
+        return "Please add your Anthropic API key to backend/.env to see the plain-English explanation."
 
     try:
         client = anthropic.Anthropic(api_key=api_key)
@@ -55,4 +55,4 @@ Do not use markdown headers, just return a conversational paragraph.
         return response.content[0].text
     except Exception as e:
         print(f"Explain API error: {e}")
-        return "Explanation generation is temporarily unavailable — see the technical breakdown above."
+        return "Please verify your Anthropic API key in backend/.env to see the plain-English explanation."
