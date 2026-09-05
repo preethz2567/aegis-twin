@@ -32,6 +32,7 @@ def recommend_fixes(graph: nx.DiGraph, attack_path_result: dict, max_fixes: int 
             
             # Simulate fix: remove vulnerabilities and lower incoming risk weight
             temp_graph.nodes[node_id]['cves'] = []
+            temp_graph.nodes[node_id]['technique_risk_score'] = 0.0
             for u, v, data in temp_graph.in_edges(node_id, data=True):
                 data['risk_weight'] = 0.0 # Make traversal cost high
                 
@@ -50,20 +51,29 @@ def recommend_fixes(graph: nx.DiGraph, attack_path_result: dict, max_fixes: int 
                 # Calculate reasoning tag
                 cves = current_graph.nodes[node_id].get('cves', [])
                 max_cvss = max((c.get('score', 0) for c in cves), default=0)
+                tech_score = current_graph.nodes[node_id].get('technique_risk_score', 0.0)
+                tech_source = current_graph.nodes[node_id].get('technique_risk_source')
                 degree = current_graph.degree(node_id)
                 
-                if max_cvss >= 7.0:
+                if tech_score > max_cvss:
+                    tag = tech_source
+                    reason_type = "technique"
+                elif max_cvss >= 7.0:
                     tag = "high_cvss"
+                    reason_type = "cve"
                 elif degree > 2:
                     tag = "high_centrality"
+                    reason_type = "structural"
                 else:
                     tag = "path_chokepoint"
+                    reason_type = "structural"
                     
                 best_fix = {
                     "node_id": node_id,
                     "node_name": current_graph.nodes[node_id].get('name', 'Unknown'),
                     "risk_cut_percent": 0, 
                     "reasoning_tag": tag,
+                    "reason_type": reason_type,
                     "new_score": new_score
                 }
                 
@@ -74,6 +84,7 @@ def recommend_fixes(graph: nx.DiGraph, attack_path_result: dict, max_fixes: int 
             # Apply fix permanently for next iteration
             fix_node = best_fix['node_id']
             current_graph.nodes[fix_node]['cves'] = []
+            current_graph.nodes[fix_node]['technique_risk_score'] = 0.0
             for u, v, data in current_graph.in_edges(fix_node, data=True):
                 data['risk_weight'] = 0.0
                 

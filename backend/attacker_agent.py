@@ -55,12 +55,12 @@ def find_highest_risk_path(graph: nx.DiGraph):
         })
         
         cves = attrs.get('cves', [])
-        if cves:
-            # use the highest CVSS score of the node
-            node_scores.append(max(c.get('score', 0) for c in cves))
-        else:
-            node_scores.append(0)
-            
+        cvss_score = max(c.get('score', 0) for c in cves) if cves else 0
+        tech_score = attrs.get('technique_risk_score', 0.0)
+        
+        effective_risk = max(cvss_score, tech_score)
+        node_scores.append(effective_risk)
+        
     risk_score = sum(node_scores) / len(node_scores) if node_scores else 0
     
     # 6. Return the dictionary

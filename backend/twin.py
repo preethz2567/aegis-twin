@@ -17,6 +17,19 @@ class TwinGraph:
             
         for node in data.get('nodes', []):
             node_id = node.pop('id')
+            
+            node_type = node.get('type')
+            is_cj = node.get('crown_jewel') or node.get('is_crown_jewel')
+            if node_type == 'credential-store':
+                node['technique_risk_score'] = 6.0
+                node['technique_risk_source'] = 'Credential Access'
+            elif node_type == 'database' and is_cj:
+                node['technique_risk_score'] = 4.0
+                node['technique_risk_source'] = 'High-Value Target'
+            else:
+                node['technique_risk_score'] = 0.0
+                node['technique_risk_source'] = None
+                
             self.graph.add_node(node_id, **node)
             
         for edge in data.get('edges', []):

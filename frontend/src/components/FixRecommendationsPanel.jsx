@@ -40,11 +40,17 @@ const FixRecommendationsPanel = ({ data }) => {
             </div>
             <div className="fix-details">
               <span className="fix-cut">-{fix.risk_cut_percent}% Risk</span>
-              <span className="fix-tag-badge" title={fix.reasoning_tag}>
-                {fix.reasoning_tag === 'high_cvss' && '🎯'}
-                {fix.reasoning_tag === 'high_centrality' && '🔗'}
-                {fix.reasoning_tag === 'path_chokepoint' && '🛑'}
-              </span>
+              {fix.reason_type === 'technique' ? (
+                <span className="fix-tag-label" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                  Technique risk: {fix.reasoning_tag}
+                </span>
+              ) : (
+                <span className="fix-tag-badge" title={fix.reasoning_tag}>
+                  {fix.reasoning_tag === 'high_cvss' && '🎯'}
+                  {fix.reasoning_tag === 'high_centrality' && '🔗'}
+                  {fix.reasoning_tag === 'path_chokepoint' && '🛑'}
+                </span>
+              )}
             </div>
           </div>
         ))}
