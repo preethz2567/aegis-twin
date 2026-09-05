@@ -4,9 +4,9 @@
 
 By leveraging an autonomous attacker agent, AEGIS-TWIN calculates and visualizes the path of least resistance through a network to a designated "Crown Jewel" target, allowing security teams to remediate structural vulnerabilities before they are exploited.
 
----
+-
 
-## ✨ Features
+##  Features
 
 - **Live Network Topology Mapping**: Visualizes the network state, identifying workstations, servers, CI/CD runners, and critical databases.
 - **D3 Force-Directed Graph**: Interactive, physics-based graph rendering that allows for panning, zooming, and dynamic data exploration.
@@ -14,9 +14,9 @@ By leveraging an autonomous attacker agent, AEGIS-TWIN calculates and visualizes
 - **Risk Scoring & Hop Analysis**: Evaluates the cumulative risk of a successful breach and displays the exact hop-by-hop sequence an attacker would take.
 - **Professional Security Aesthetic**: Clean, dark-themed UI optimized for projector legibility and NOC (Network Operations Center) environments.
 
----
+-
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **React.js** (Vite)
@@ -30,7 +30,7 @@ By leveraging an autonomous attacker agent, AEGIS-TWIN calculates and visualizes
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v16+)
@@ -69,7 +69,7 @@ npm run dev
 
 ---
 
-## 🕹️ Usage
+##  Usage
 
 1. Open the dashboard in your browser. You will see the network digital twin rendered dynamically.
 2. Nodes are color-coded by type, and their radius indicates the severity of their known vulnerabilities.
