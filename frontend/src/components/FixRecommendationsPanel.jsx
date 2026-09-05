@@ -36,7 +36,11 @@ const FixRecommendationsPanel = ({ data }) => {
           <div key={fix.node_id} className="fix-item">
             <div className="fix-header">
               <span className="fix-rank">#{idx + 1}</span>
-              <span className="fix-name">{fix.node_name}</span>
+              <span className="fix-name">
+                {fix.is_crown_jewel 
+                  ? `🛡️ Harden ${fix.node_name} (access controls, monitoring)` 
+                  : fix.node_name}
+              </span>
             </div>
             <div className="fix-details">
               <span className="fix-cut">-{fix.risk_cut_percent}% Risk</span>

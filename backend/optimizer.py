@@ -68,9 +68,11 @@ def recommend_fixes(graph: nx.DiGraph, attack_path_result: dict, max_fixes: int 
                     tag = "path_chokepoint"
                     reason_type = "structural"
                     
+                is_cj = current_graph.nodes[node_id].get('crown_jewel') or current_graph.nodes[node_id].get('is_crown_jewel')
                 best_fix = {
                     "node_id": node_id,
                     "node_name": current_graph.nodes[node_id].get('name', 'Unknown'),
+                    "is_crown_jewel": bool(is_cj),
                     "risk_cut_percent": 0, 
                     "reasoning_tag": tag,
                     "reason_type": reason_type,
@@ -78,7 +80,7 @@ def recommend_fixes(graph: nx.DiGraph, attack_path_result: dict, max_fixes: int 
                 }
                 
         if best_fix and best_fix['new_score'] < current_risk_score:
-            cut_percent = ((current_risk_score - best_fix['new_score']) / current_risk_score) * 100
+            cut_percent = ((original_risk_score - best_fix['new_score']) / original_risk_score) * 100
             best_fix['risk_cut_percent'] = round(cut_percent, 1)
             
             # Apply fix permanently for next iteration
