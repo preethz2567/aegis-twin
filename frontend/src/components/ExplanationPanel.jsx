@@ -14,7 +14,26 @@ const ExplanationPanel = ({ text, isLoading }) => {
             Generating explanation...
           </div>
         ) : (
-          <p>{text}</p>
+          <div>
+            {text.split('\n').map((paragraph, i) => {
+              const trimmed = paragraph.trim();
+              if (!trimmed) return null;
+              
+              // Handle basic bolding: **text**
+              const parts = trimmed.split(/(\*\*.*?\*\*)/g);
+              
+              return (
+                <p key={i} style={{ marginBottom: '1rem' }}>
+                  {parts.map((part, j) => {
+                    if (part.startsWith('**') && part.endsWith('**')) {
+                      return <strong key={j}>{part.slice(2, -2)}</strong>;
+                    }
+                    return part;
+                  })}
+                </p>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>

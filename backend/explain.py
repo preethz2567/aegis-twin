@@ -36,12 +36,14 @@ To mitigate this, the optimization engine recommends the following fixes in orde
 
 Total Projected Risk Reduction: {fix_recommendations.get('total_risk_reduction_percent', 0)}%
 
-Provide a short (3-5 sentence) plain-English explanation covering: 
-1. What the risk is and why this specific path matters.
-2. Why the recommended fixes (in order) meaningfully reduce the risk.
-
+Provide a plain-English explanation covering what the risk is and how the fixes mitigate it.
 Write for someone who is NOT a security specialist. Avoid jargon like 'CVSS' or 'greedy algorithm'. 
-Do not use markdown headers, just return a conversational paragraph.
+
+STRUCTURE YOUR RESPONSE EXACTLY AS FOLLOWS (using Markdown paragraphs and bold text where requested):
+1. **[Bold Opening]**: One bolded, punchy opening sentence summarizing the core danger.
+2. **[The Risk]**: A short paragraph (2-3 sentences) explaining why that chain is dangerous.
+3. **[The Fixes]**: A short paragraph explaining the fixes in priority order, broken into distinct sentences per fix rather than one long run-on paragraph.
+4. **[Conclusion]**: A final one-line sentence stating the overall risk reduction percentage.
 """
         
         response = client.messages.create(
