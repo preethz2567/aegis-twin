@@ -1,0 +1,32 @@
+{
+  "nodes": [
+    {"id": "n1", "name": "Employee Workstation 1", "type": "workstation", "cves": [{"id": "CVE-2023-1001", "score": 5.4}]},
+    {"id": "n2", "name": "Employee Workstation 2", "type": "workstation", "cves": [{"id": "CVE-2023-1002", "score": 4.3}]},
+    {"id": "n3", "name": "HR Workstation", "type": "workstation", "cves": []},
+    {"id": "n4", "name": "Web Server", "type": "server", "cves": [{"id": "CVE-2023-1004", "score": 7.5}]},
+    {"id": "n5", "name": "App Server", "type": "server", "cves": [{"id": "CVE-2023-1005", "score": 6.8}, {"id": "CVE-2023-1006", "score": 8.1}]},
+    {"id": "n6", "name": "Production Database", "type": "database", "cves": [], "crown_jewel": true},
+    {"id": "n7", "name": "Internal Wiki", "type": "server", "cves": [{"id": "CVE-2023-1007", "score": 5.0}]},
+    {"id": "n8", "name": "CI/CD Runner", "type": "ci-cd-runner", "cves": [{"id": "CVE-2023-1008", "score": 9.8}]},
+    {"id": "n9", "name": "Credential Store", "type": "credential-store", "cves": []},
+    {"id": "n10", "name": "VPN Gateway", "type": "server", "cves": [{"id": "CVE-2023-1010", "score": 8.5}]},
+    {"id": "n11", "name": "Backup Server", "type": "server", "cves": [{"id": "CVE-2023-1011", "score": 6.0}]},
+    {"id": "n12", "name": "Admin Workstation", "type": "workstation", "cves": []}
+  ],
+  "edges": [
+    {"source": "n10", "target": "n1", "risk_weight": 5.4},
+    {"source": "n10", "target": "n2", "risk_weight": 4.3},
+    {"source": "n10", "target": "n3", "risk_weight": 1.0},
+    {"source": "n10", "target": "n12", "risk_weight": 1.0},
+    {"source": "n1", "target": "n7", "risk_weight": 5.0},
+    {"source": "n2", "target": "n7", "risk_weight": 5.0},
+    {"source": "n12", "target": "n8", "risk_weight": 9.8},
+    {"source": "n8", "target": "n5", "risk_weight": 8.1},
+    {"source": "n4", "target": "n5", "risk_weight": 8.1},
+    {"source": "n5", "target": "n6", "risk_weight": 1.0},
+    {"source": "n12", "target": "n9", "risk_weight": 1.0},
+    {"source": "n9", "target": "n5", "risk_weight": 8.1},
+    {"source": "n9", "target": "n6", "risk_weight": 1.0},
+    {"source": "n6", "target": "n11", "risk_weight": 6.0}
+  ]
+}
