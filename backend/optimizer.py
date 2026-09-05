@@ -36,7 +36,13 @@ def recommend_fixes(graph: nx.DiGraph, attack_path_result: dict, max_fixes: int 
                 data['risk_weight'] = 0.0 # Make traversal cost high
                 
             new_path_result = find_highest_risk_path(temp_graph)
-            new_score = new_path_result.get('risk_score', 0) if "error" not in new_path_result else 0
+            if "error" in new_path_result:
+                new_score = 0.0
+            else:
+                new_score = new_path_result.get('risk_score', 0.0)
+                if new_score == 0.0:
+                    # Path still exists but CVSS is 0, assign a very low base score to prevent false 100%
+                    new_score = 0.1
             
             if new_score < best_new_score:
                 best_new_score = new_score

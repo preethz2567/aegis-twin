@@ -21,9 +21,15 @@ const FixRecommendationsPanel = ({ data }) => {
         </div>
       </div>
       
-      <div className="reduction-badge">
-        ↓ {optimization.total_risk_reduction_percent}% Risk Reduction
-      </div>
+      {optimization.total_risk_reduction_percent === 100 ? (
+        <div className="reduction-badge" style={{ borderColor: 'var(--accent)', background: 'rgba(62, 142, 138, 0.2)' }}>
+          ⭐ Target Fully Isolated (100% Risk Reduction)
+        </div>
+      ) : (
+        <div className="reduction-badge">
+          ↓ {optimization.total_risk_reduction_percent}% Risk Reduction
+        </div>
+      )}
       
       <div className="fixes-list">
         {optimization.recommended_fixes.map((fix, idx) => (
