@@ -505,3 +505,50 @@ body {
   bottom: 0;
   left: 0;
 }
+
+/* Explanation Panel */
+.explain-panel {
+  width: 340px;
+  background-color: var(--panel-bg);
+  border-left: 3px solid var(--accent);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: -4px 0 15px rgba(0,0,0,0.3);
+  z-index: 5;
+}
+
+.explain-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.explain-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #D4D4D8;
+}
+
+.explain-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.spinner-small {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(62, 142, 138, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 1s linear infinite;
+}

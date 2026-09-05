@@ -2,20 +2,24 @@ import React, { useState } from 'react';
 import TwinGraph from './components/TwinGraph';
 import AttackPathPanel from './components/AttackPathPanel';
 import FixRecommendationsPanel from './components/FixRecommendationsPanel';
-import { fetchAttackPath, fetchOptimizePath } from './api';
+import ExplanationPanel from './components/ExplanationPanel';
+import { fetchAttackPath, fetchOptimizePath, fetchExplain } from './api';
 import './index.css';
 
 function App() {
   const [attackData, setAttackData] = useState(null);
   const [optimizeData, setOptimizeData] = useState(null);
+  const [explainData, setExplainData] = useState(null);
   const [isSimulating, setIsSimulating] = useState(false);
   const [isOptimizing, setIsOptimizing] = useState(false);
+  const [isExplaining, setIsExplaining] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleSimulate = async () => {
     setIsSimulating(true);
     setErrorMsg('');
     setOptimizeData(null);
+    setExplainData(null);
     try {
       const data = await fetchAttackPath();
       if (data.error) {
@@ -35,15 +39,29 @@ function App() {
   const handleOptimize = async () => {
     setIsOptimizing(true);
     setErrorMsg('');
+    setExplainData(null);
+    setIsExplaining(true);
+    
     try {
       const data = await fetchOptimizePath();
       if (data.attack_path?.error) {
         setErrorMsg(data.attack_path.error);
+        setIsExplaining(false);
       } else {
         setOptimizeData(data);
+        
+        // Auto trigger explain call
+        fetchExplain().then(expData => {
+           setExplainData(expData);
+           setIsExplaining(false);
+        }).catch(err => {
+           setExplainData({ explanation: "Explanation generation is temporarily unavailable — see the technical breakdown above." });
+           setIsExplaining(false);
+        });
       }
     } catch (err) {
       setErrorMsg('Failed to run optimization.');
+      setIsExplaining(false);
     } finally {
       setIsOptimizing(false);
     }
@@ -92,6 +110,9 @@ function App() {
            <div className="panels-container">
               <AttackPathPanel data={optimizeData.attack_path} />
               <FixRecommendationsPanel data={optimizeData} />
+              {(isExplaining || explainData) && (
+                <ExplanationPanel text={explainData?.explanation} isLoading={isExplaining} />
+              )}
            </div>
         )}
       </main>

@@ -21,3 +21,11 @@ export const fetchOptimizePath = async () => {
   }
   return response.json();
 };
+
+export const fetchExplain = async () => {
+  const response = await fetch('http://localhost:8000/api/simulate/explain');
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
