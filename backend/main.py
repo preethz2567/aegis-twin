@@ -35,3 +35,20 @@ def simulate_optimize():
         "attack_path": path_result,
         "optimization": optimization_result
     }
+
+@app.get("/api/simulate/explain")
+def simulate_explain():
+    from explain import generate_explanation
+    
+    path_result = find_highest_risk_path(twin_graph.graph)
+    if "error" in path_result:
+        return {"attack_path": path_result, "optimization": None, "explanation": None}
+        
+    optimization_result = recommend_fixes(twin_graph.graph, path_result)
+    explanation = generate_explanation(path_result, optimization_result)
+    
+    return {
+        "attack_path": path_result,
+        "optimization": optimization_result,
+        "explanation": explanation
+    }
