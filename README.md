@@ -1,4 +1,4 @@
-# 🛡️ AEGIS-TWIN
+# AEGIS-TWIN
 
 **AEGIS-TWIN** is a full-stack network security visualization and simulation platform. It creates a "digital twin" of a company's network infrastructure to model vulnerabilities, calculate risk weights based on CVSS scores, and proactively simulate cyberattacks.
 
@@ -28,7 +28,7 @@ By leveraging an autonomous attacker agent, AEGIS-TWIN calculates and visualizes
 - **NetworkX** (Graph modeling and shortest-path calculation)
 - **Uvicorn** (ASGI server)
 
----
+-
 
 ## Getting Started
 
@@ -67,7 +67,7 @@ npm run dev
 ```
 *Navigate to `http://localhost:5173` in your browser.*
 
----
+-
 
 ##  Usage
 
