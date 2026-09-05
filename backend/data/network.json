@@ -1,32 +1,268 @@
 {
-  "nodes": [
-    {"id": "n1", "name": "Employee Workstation 1", "type": "workstation", "cves": [{"id": "CVE-2023-1001", "score": 5.4}]},
-    {"id": "n2", "name": "Employee Workstation 2", "type": "workstation", "cves": [{"id": "CVE-2023-1002", "score": 4.3}]},
-    {"id": "n3", "name": "HR Workstation", "type": "workstation", "cves": []},
-    {"id": "n4", "name": "Web Server", "type": "server", "cves": [{"id": "CVE-2023-1004", "score": 7.5}]},
-    {"id": "n5", "name": "App Server", "type": "server", "cves": [{"id": "CVE-2023-1005", "score": 6.8}, {"id": "CVE-2023-1006", "score": 8.1}]},
-    {"id": "n6", "name": "Production Database", "type": "database", "cves": [], "crown_jewel": true},
-    {"id": "n7", "name": "Internal Wiki", "type": "server", "cves": [{"id": "CVE-2023-1007", "score": 5.0}]},
-    {"id": "n8", "name": "CI/CD Runner", "type": "ci-cd-runner", "cves": [{"id": "CVE-2023-1008", "score": 9.8}]},
-    {"id": "n9", "name": "Credential Store", "type": "credential-store", "cves": []},
-    {"id": "n10", "name": "VPN Gateway", "type": "server", "cves": [{"id": "CVE-2023-1010", "score": 8.5}]},
-    {"id": "n11", "name": "Backup Server", "type": "server", "cves": [{"id": "CVE-2023-1011", "score": 6.0}]},
-    {"id": "n12", "name": "Admin Workstation", "type": "workstation", "cves": []}
-  ],
-  "edges": [
-    {"source": "n10", "target": "n1", "risk_weight": 5.4},
-    {"source": "n10", "target": "n2", "risk_weight": 4.3},
-    {"source": "n10", "target": "n3", "risk_weight": 1.0},
-    {"source": "n10", "target": "n12", "risk_weight": 1.0},
-    {"source": "n1", "target": "n7", "risk_weight": 5.0},
-    {"source": "n2", "target": "n7", "risk_weight": 5.0},
-    {"source": "n12", "target": "n8", "risk_weight": 9.8},
-    {"source": "n8", "target": "n5", "risk_weight": 8.1},
-    {"source": "n4", "target": "n5", "risk_weight": 8.1},
-    {"source": "n5", "target": "n6", "risk_weight": 1.0},
-    {"source": "n12", "target": "n9", "risk_weight": 1.0},
-    {"source": "n9", "target": "n5", "risk_weight": 8.1},
-    {"source": "n9", "target": "n6", "risk_weight": 1.0},
-    {"source": "n6", "target": "n11", "risk_weight": 6.0}
-  ]
+    "_comment": "CVE data sourced from NVD public API \u2014 topology and node names remain illustrative.",
+    "nodes": [
+        {
+            "id": "n1",
+            "name": "Employee Workstation 1",
+            "type": "workstation",
+            "cves": [
+                {
+                    "id": "CVE-1999-1133",
+                    "score": 4.6,
+                    "description": "HP-UX 9.x and 10.x running X windows may allow local attackers to gain privileges via (1) vuefile, (2) vuepad, (3) dtfile, or (4) dtpad, which do not authenticate users."
+                },
+                {
+                    "id": "CVE-2002-2275",
+                    "score": 2.1,
+                    "description": "Fortres 101 4.1 allows local users to bypass Fortres by pressing the Windows and \"F\" key together for 30 seconds, which opens multiple windows and eventually causes explorer.exe to crash, which then opens an unrestricted explorer.exe."
+                }
+            ]
+        },
+        {
+            "id": "n2",
+            "name": "Employee Workstation 2",
+            "type": "workstation",
+            "cves": [
+                {
+                    "id": "CVE-1999-1133",
+                    "score": 4.6,
+                    "description": "HP-UX 9.x and 10.x running X windows may allow local attackers to gain privileges via (1) vuefile, (2) vuepad, (3) dtfile, or (4) dtpad, which do not authenticate users."
+                },
+                {
+                    "id": "CVE-2002-2275",
+                    "score": 2.1,
+                    "description": "Fortres 101 4.1 allows local users to bypass Fortres by pressing the Windows and \"F\" key together for 30 seconds, which opens multiple windows and eventually causes explorer.exe to crash, which then opens an unrestricted explorer.exe."
+                }
+            ]
+        },
+        {
+            "id": "n3",
+            "name": "HR Workstation",
+            "type": "workstation",
+            "cves": []
+        },
+        {
+            "id": "n4",
+            "name": "Web Server",
+            "type": "server",
+            "cves": [
+                {
+                    "id": "CVE-2009-2629",
+                    "score": 7.5,
+                    "description": "Buffer underflow in src/http/ngx_http_parse.c in nginx 0.1.0 through 0.5.37, 0.6.x before 0.6.39, 0.7.x before 0.7.62, and 0.8.x before 0.8.15 allows remote attackers to execute arbitrary code via crafted HTTP requests."
+                },
+                {
+                    "id": "CVE-2009-3896",
+                    "score": 5.0,
+                    "description": "src/http/ngx_http_parse.c in nginx (aka Engine X) 0.1.0 through 0.4.14, 0.5.x before 0.5.38, 0.6.x before 0.6.39, 0.7.x before 0.7.62, and 0.8.x before 0.8.14 allows remote attackers to cause a denial of service (NULL pointer dereference and worker process crash) via a long URI."
+                },
+                {
+                    "id": "CVE-2009-3898",
+                    "score": 4.9,
+                    "description": "Directory traversal vulnerability in src/http/modules/ngx_http_dav_module.c in nginx (aka Engine X) before 0.7.63, and 0.8.x before 0.8.17, allows remote authenticated users to create or overwrite arbitrary files via a .. (dot dot) in the Destination HTTP header for the WebDAV (1) COPY or (2) MOVE method."
+                }
+            ]
+        },
+        {
+            "id": "n5",
+            "name": "App Server",
+            "type": "server",
+            "cves": [
+                {
+                    "id": "CVE-2009-2629",
+                    "score": 7.5,
+                    "description": "Buffer underflow in src/http/ngx_http_parse.c in nginx 0.1.0 through 0.5.37, 0.6.x before 0.6.39, 0.7.x before 0.7.62, and 0.8.x before 0.8.15 allows remote attackers to execute arbitrary code via crafted HTTP requests."
+                },
+                {
+                    "id": "CVE-2009-3896",
+                    "score": 5.0,
+                    "description": "src/http/ngx_http_parse.c in nginx (aka Engine X) 0.1.0 through 0.4.14, 0.5.x before 0.5.38, 0.6.x before 0.6.39, 0.7.x before 0.7.62, and 0.8.x before 0.8.14 allows remote attackers to cause a denial of service (NULL pointer dereference and worker process crash) via a long URI."
+                },
+                {
+                    "id": "CVE-2009-3898",
+                    "score": 4.9,
+                    "description": "Directory traversal vulnerability in src/http/modules/ngx_http_dav_module.c in nginx (aka Engine X) before 0.7.63, and 0.8.x before 0.8.17, allows remote authenticated users to create or overwrite arbitrary files via a .. (dot dot) in the Destination HTTP header for the WebDAV (1) COPY or (2) MOVE method."
+                }
+            ]
+        },
+        {
+            "id": "n6",
+            "name": "Production Database",
+            "type": "database",
+            "cves": [],
+            "crown_jewel": true
+        },
+        {
+            "id": "n7",
+            "name": "Internal Wiki",
+            "type": "server",
+            "cves": [
+                {
+                    "id": "CVE-2009-2629",
+                    "score": 7.5,
+                    "description": "Buffer underflow in src/http/ngx_http_parse.c in nginx 0.1.0 through 0.5.37, 0.6.x before 0.6.39, 0.7.x before 0.7.62, and 0.8.x before 0.8.15 allows remote attackers to execute arbitrary code via crafted HTTP requests."
+                },
+                {
+                    "id": "CVE-2009-3896",
+                    "score": 5.0,
+                    "description": "src/http/ngx_http_parse.c in nginx (aka Engine X) 0.1.0 through 0.4.14, 0.5.x before 0.5.38, 0.6.x before 0.6.39, 0.7.x before 0.7.62, and 0.8.x before 0.8.14 allows remote attackers to cause a denial of service (NULL pointer dereference and worker process crash) via a long URI."
+                },
+                {
+                    "id": "CVE-2009-3898",
+                    "score": 4.9,
+                    "description": "Directory traversal vulnerability in src/http/modules/ngx_http_dav_module.c in nginx (aka Engine X) before 0.7.63, and 0.8.x before 0.8.17, allows remote authenticated users to create or overwrite arbitrary files via a .. (dot dot) in the Destination HTTP header for the WebDAV (1) COPY or (2) MOVE method."
+                }
+            ]
+        },
+        {
+            "id": "n8",
+            "name": "CI/CD Runner",
+            "type": "ci-cd-runner",
+            "cves": [
+                {
+                    "id": "CVE-2011-4344",
+                    "score": 2.6,
+                    "description": "Cross-site scripting (XSS) vulnerability in Jenkins Core in Jenkins before 1.438, and 1.409 LTS before 1.409.3 LTS, when a stand-alone container is used, allows remote attackers to inject arbitrary web script or HTML via vectors related to error messages."
+                },
+                {
+                    "id": "CVE-2012-0324",
+                    "score": 4.3,
+                    "description": "Cross-site scripting (XSS) vulnerability in Jenkins before 1.454, Jenkins LTS before 1.424.5, and Jenkins Enterprise 1.400.x before 1.400.0.13 and 1.424.x before 1.424.5.1 allows remote attackers to inject arbitrary web script or HTML via unspecified vectors, a different vulnerability than CVE-2012-0325."
+                },
+                {
+                    "id": "CVE-2012-0325",
+                    "score": 4.3,
+                    "description": "Cross-site scripting (XSS) vulnerability in Jenkins before 1.454, Jenkins LTS before 1.424.5, and Jenkins Enterprise 1.400.x before 1.400.0.13 and 1.424.x before 1.424.5.1 allows remote attackers to inject arbitrary web script or HTML via unspecified vectors, a different vulnerability than CVE-2012-0324."
+                }
+            ]
+        },
+        {
+            "id": "n9",
+            "name": "Credential Store",
+            "type": "credential-store",
+            "cves": []
+        },
+        {
+            "id": "n10",
+            "name": "VPN Gateway",
+            "type": "server",
+            "cves": [
+                {
+                    "id": "CVE-2009-2629",
+                    "score": 7.5,
+                    "description": "Buffer underflow in src/http/ngx_http_parse.c in nginx 0.1.0 through 0.5.37, 0.6.x before 0.6.39, 0.7.x before 0.7.62, and 0.8.x before 0.8.15 allows remote attackers to execute arbitrary code via crafted HTTP requests."
+                },
+                {
+                    "id": "CVE-2009-3896",
+                    "score": 5.0,
+                    "description": "src/http/ngx_http_parse.c in nginx (aka Engine X) 0.1.0 through 0.4.14, 0.5.x before 0.5.38, 0.6.x before 0.6.39, 0.7.x before 0.7.62, and 0.8.x before 0.8.14 allows remote attackers to cause a denial of service (NULL pointer dereference and worker process crash) via a long URI."
+                },
+                {
+                    "id": "CVE-2009-3898",
+                    "score": 4.9,
+                    "description": "Directory traversal vulnerability in src/http/modules/ngx_http_dav_module.c in nginx (aka Engine X) before 0.7.63, and 0.8.x before 0.8.17, allows remote authenticated users to create or overwrite arbitrary files via a .. (dot dot) in the Destination HTTP header for the WebDAV (1) COPY or (2) MOVE method."
+                }
+            ]
+        },
+        {
+            "id": "n11",
+            "name": "Backup Server",
+            "type": "server",
+            "cves": [
+                {
+                    "id": "CVE-2009-2629",
+                    "score": 7.5,
+                    "description": "Buffer underflow in src/http/ngx_http_parse.c in nginx 0.1.0 through 0.5.37, 0.6.x before 0.6.39, 0.7.x before 0.7.62, and 0.8.x before 0.8.15 allows remote attackers to execute arbitrary code via crafted HTTP requests."
+                },
+                {
+                    "id": "CVE-2009-3896",
+                    "score": 5.0,
+                    "description": "src/http/ngx_http_parse.c in nginx (aka Engine X) 0.1.0 through 0.4.14, 0.5.x before 0.5.38, 0.6.x before 0.6.39, 0.7.x before 0.7.62, and 0.8.x before 0.8.14 allows remote attackers to cause a denial of service (NULL pointer dereference and worker process crash) via a long URI."
+                },
+                {
+                    "id": "CVE-2009-3898",
+                    "score": 4.9,
+                    "description": "Directory traversal vulnerability in src/http/modules/ngx_http_dav_module.c in nginx (aka Engine X) before 0.7.63, and 0.8.x before 0.8.17, allows remote authenticated users to create or overwrite arbitrary files via a .. (dot dot) in the Destination HTTP header for the WebDAV (1) COPY or (2) MOVE method."
+                }
+            ]
+        },
+        {
+            "id": "n12",
+            "name": "Admin Workstation",
+            "type": "workstation",
+            "cves": []
+        }
+    ],
+    "edges": [
+        {
+            "source": "n10",
+            "target": "n1",
+            "risk_weight": 5.4
+        },
+        {
+            "source": "n10",
+            "target": "n2",
+            "risk_weight": 4.3
+        },
+        {
+            "source": "n10",
+            "target": "n3",
+            "risk_weight": 1.0
+        },
+        {
+            "source": "n10",
+            "target": "n12",
+            "risk_weight": 1.0
+        },
+        {
+            "source": "n1",
+            "target": "n7",
+            "risk_weight": 5.0
+        },
+        {
+            "source": "n2",
+            "target": "n7",
+            "risk_weight": 5.0
+        },
+        {
+            "source": "n12",
+            "target": "n8",
+            "risk_weight": 9.8
+        },
+        {
+            "source": "n8",
+            "target": "n5",
+            "risk_weight": 8.1
+        },
+        {
+            "source": "n4",
+            "target": "n5",
+            "risk_weight": 8.1
+        },
+        {
+            "source": "n5",
+            "target": "n6",
+            "risk_weight": 1.0
+        },
+        {
+            "source": "n12",
+            "target": "n9",
+            "risk_weight": 1.0
+        },
+        {
+            "source": "n9",
+            "target": "n5",
+            "risk_weight": 8.1
+        },
+        {
+            "source": "n9",
+            "target": "n6",
+            "risk_weight": 1.0
+        },
+        {
+            "source": "n6",
+            "target": "n11",
+            "risk_weight": 6.0
+        }
+    ]
 }
