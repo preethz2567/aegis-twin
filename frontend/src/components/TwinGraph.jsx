@@ -3,12 +3,12 @@ import * as d3 from 'd3';
 import { fetchTwinState } from '../api';
 
 const NODE_COLORS = {
-  'workstation': '#3fb950',
-  'server': '#58a6ff',
-  'database': '#d29922',
-  'ci-cd-runner': '#bc8cff',
-  'credential-store': '#f85149',
-  'default': '#8b949e'
+  'workstation': '#6B7A99',
+  'server': '#4C5D7A',
+  'database': '#526079',
+  'ci-cd-runner': '#5A6B87',
+  'credential-store': '#7A8AA8',
+  'default': '#4A5568'
 };
 
 const TwinGraph = ({ attackPath }) => {
@@ -212,8 +212,8 @@ const TwinGraph = ({ attackPath }) => {
               <span>{type.charAt(0).toUpperCase() + type.slice(1).replace(/-/g, ' ')}</span>
             </div>
           ))}
-          <div className="legend-item" style={{ marginTop: '8px', borderTop: '1px solid #30363d', paddingTop: '8px' }}>
-             <div className="legend-color" style={{ backgroundColor: 'transparent', border: '2px solid #ffd700' }}></div>
+          <div className="legend-item" style={{ marginTop: '8px', borderTop: '1px solid #2A2A30', paddingTop: '8px' }}>
+             <div className="legend-color" style={{ backgroundColor: 'transparent', border: '2px solid #C9A24B' }}></div>
              <span>Crown Jewel</span>
           </div>
         </div>

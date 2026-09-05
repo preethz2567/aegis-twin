@@ -2,9 +2,8 @@ import React from 'react';
 
 const AttackPathPanel = ({ data }) => {
   const getRiskColor = (score) => {
-    if (score >= 7.0) return '#f85149';
-    if (score >= 4.0) return '#d29922';
-    return '#3fb950';
+    if (score >= 7.0) return '#D9534F'; // muted red
+    return '#F2F2F2';
   };
 
   return (
