@@ -56,7 +56,15 @@ STRUCTURE YOUR RESPONSE EXACTLY AS FOLLOWS (using Markdown paragraphs and bold t
             ]
         )
         
-        return response.content[0].text
+        # Extract the text block (ignoring ThinkingBlocks if present)
+        for block in response.content:
+            if getattr(block, 'type', '') == 'text':
+                return block.text
+            # Fallback for dictionary access if block is a dict
+            elif isinstance(block, dict) and block.get('type') == 'text':
+                return block.get('text')
+                
+        return "Explanation could not be generated."
     except Exception as e:
         import traceback
         print(f"Explain API error: {e}")
