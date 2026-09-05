@@ -19,17 +19,38 @@ const ExplanationPanel = ({ text, isLoading }) => {
               const trimmed = paragraph.trim();
               if (!trimmed) return null;
               
-              // Handle basic bolding: **text**
-              const parts = trimmed.split(/(\*\*.*?\*\*)/g);
+              let contentStr = trimmed;
+              let isH1 = false;
+              let isH2 = false;
               
+              if (trimmed.startsWith('# ')) {
+                isH1 = true;
+                contentStr = trimmed.substring(2);
+              } else if (trimmed.startsWith('## ')) {
+                isH2 = true;
+                contentStr = trimmed.substring(3);
+              }
+
+              // Handle basic bolding: **text**
+              const parts = contentStr.split(/(\*\*.*?\*\*)/g);
+              
+              const mappedParts = parts.map((part, j) => {
+                if (part.startsWith('**') && part.endsWith('**')) {
+                  return <strong key={j}>{part.slice(2, -2)}</strong>;
+                }
+                return part;
+              });
+              
+              if (isH1) {
+                return <h4 key={i} style={{ marginBottom: '0.5rem', marginTop: i > 0 ? '1rem' : 0, color: 'var(--text-main)', fontSize: '1.1rem' }}>{mappedParts}</h4>;
+              }
+              if (isH2) {
+                return <h5 key={i} style={{ marginBottom: '0.5rem', marginTop: i > 0 ? '0.75rem' : 0, color: 'var(--text-main)', fontSize: '1rem' }}>{mappedParts}</h5>;
+              }
+
               return (
                 <p key={i} style={{ marginBottom: '1rem' }}>
-                  {parts.map((part, j) => {
-                    if (part.startsWith('**') && part.endsWith('**')) {
-                      return <strong key={j}>{part.slice(2, -2)}</strong>;
-                    }
-                    return part;
-                  })}
+                  {mappedParts}
                 </p>
               );
             })}
