@@ -156,20 +156,23 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
 .simulate-btn {
   background-color: var(--accent);
   color: #000;
   border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
+  padding: 0.65rem 1.2rem;
+  font-size: 0.9rem;
   font-weight: 600;
   border-radius: 6px;
   cursor: pointer;
@@ -177,6 +180,7 @@ body {
   align-items: center;
   gap: 0.5rem;
   transition: opacity 0.2s;
+  white-space: nowrap;
 }
 
 .simulate-btn:hover {
