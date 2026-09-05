@@ -3,7 +3,9 @@ import json
 from dotenv import load_dotenv
 import anthropic
 
-load_dotenv()
+current_dir = os.path.dirname(os.path.abspath(__file__))
+env_path = os.path.join(current_dir, '.env')
+load_dotenv(dotenv_path=env_path)
 
 def generate_explanation(attack_path_result: dict, fix_recommendations: dict) -> str:
     api_key = os.getenv("ANTHROPIC_API_KEY")
