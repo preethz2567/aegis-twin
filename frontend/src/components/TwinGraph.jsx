@@ -11,7 +11,7 @@ const NODE_COLORS = {
   'default': '#4A5568'
 };
 
-const TwinGraph = ({ attackPath }) => {
+const TwinGraph = ({ attackPath, recommendedFixes }) => {
   const svgRef = useRef(null);
   const containerRef = useRef(null);
   const [status, setStatus] = useState('loading');
@@ -89,9 +89,10 @@ const TwinGraph = ({ attackPath }) => {
 
       // Nodes container
       const node = g.append('g')
-        .selectAll('g')
+        .selectAll('.node-group')
         .data(data.nodes)
         .enter().append('g')
+        .attr('class', 'node-group')
         .call(d3.drag()
           .on('start', dragstarted)
           .on('drag', dragged)
@@ -161,9 +162,12 @@ const TwinGraph = ({ attackPath }) => {
     
     const svg = d3.select(svgRef.current);
     
+    // reset
+    svg.selectAll('.node-circle').classed('node-dimmed node-highlighted node-fixed', false);
+    svg.selectAll('.fix-ring').remove();
+    svg.selectAll('line').classed('edge-dimmed edge-highlighted', false);
+    
     if (!attackPath || attackPath.length === 0) {
-      svg.selectAll('.node-circle').classed('node-dimmed node-highlighted', false);
-      svg.selectAll('line').classed('edge-dimmed edge-highlighted', false);
       return;
     }
     
@@ -190,7 +194,25 @@ const TwinGraph = ({ attackPath }) => {
       .classed('edge-dimmed', false)
       .classed('edge-highlighted', true);
       
-  }, [attackPath, status]);
+    if (recommendedFixes && recommendedFixes.length > 0) {
+      const fixSet = new Set(recommendedFixes);
+      
+      const nodeGroups = svg.selectAll('.node-group').filter(d => fixSet.has(d.id));
+      
+      nodeGroups.insert('circle', '.node-circle')
+        .attr('class', 'fix-ring')
+        .attr('r', d => d.radius + 6)
+        .attr('fill', 'none')
+        .attr('stroke', '#3E8E8A')
+        .attr('stroke-width', 3)
+        .attr('stroke-dasharray', '4,4');
+        
+      svg.selectAll('.node-circle')
+        .filter(d => fixSet.has(d.id))
+        .classed('node-fixed', true);
+    }
+      
+  }, [attackPath, recommendedFixes, status]);
 
   return (
     <div className="graph-container" ref={containerRef}>
