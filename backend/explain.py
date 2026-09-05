@@ -49,7 +49,7 @@ STRUCTURE YOUR RESPONSE EXACTLY AS FOLLOWS (using Markdown paragraphs and bold t
 """
         
         response = client.messages.create(
-            model="claude-sonnet-4-6",
+            model="claude-sonnet-5",
             max_tokens=300,
             messages=[
                 {"role": "user", "content": prompt}
@@ -58,5 +58,7 @@ STRUCTURE YOUR RESPONSE EXACTLY AS FOLLOWS (using Markdown paragraphs and bold t
         
         return response.content[0].text
     except Exception as e:
+        import traceback
         print(f"Explain API error: {e}")
+        traceback.print_exc()
         return "Please verify your Anthropic API key in backend/.env to see the plain-English explanation."
