@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import NavBar from './components/NavBar';
 import DashboardPage from './pages/DashboardPage';
 import HistoryPage from './pages/HistoryPage';
+import HistoryDetailPage from './pages/HistoryDetailPage';
 import NetworkProfilesPage from './pages/NetworkProfilesPage';
 import './index.css';
 
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/history" element={<HistoryPage />} />
+            <Route path="/history/:id" element={<HistoryDetailPage />} />
             <Route path="/profiles" element={<NetworkProfilesPage />} />
           </Routes>
         </div>

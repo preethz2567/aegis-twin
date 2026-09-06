@@ -71,3 +71,48 @@ export const generateReport = async (attackPath, optimization, explanation) => {
   }
   return response.blob();
 };
+
+export const saveAssessment = async (name, attackPath, fixRecommendations, explanation) => {
+  const response = await fetch('http://localhost:8000/api/assessments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name,
+      attack_path: attackPath,
+      fix_recommendations: fixRecommendations,
+      explanation: explanation || '',
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
+export const getAssessments = async () => {
+  const response = await fetch('http://localhost:8000/api/assessments');
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
+export const getAssessment = async (id) => {
+  const response = await fetch(`http://localhost:8000/api/assessments/${id}`);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
+export const deleteAssessment = async (id) => {
+  const response = await fetch(`http://localhost:8000/api/assessments/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};

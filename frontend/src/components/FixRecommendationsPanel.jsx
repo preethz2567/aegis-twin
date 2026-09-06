@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FixRecommendationsPanel = ({ data, onApplyFix, isApplying }) => {
+const FixRecommendationsPanel = ({ data, onApplyFix, isApplying, readOnly }) => {
   const { optimization } = data;
   
   if (!optimization) return null;
@@ -63,15 +63,17 @@ const FixRecommendationsPanel = ({ data, onApplyFix, isApplying }) => {
                 </span>
               )}
             </div>
-            <div className="fix-actions" style={{ marginTop: '0.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '0.5rem' }}>
-              <button 
-                className="apply-btn" 
-                onClick={() => onApplyFix(fix.node_id)}
-                disabled={isApplying}
-              >
-                Apply Fix
-              </button>
-            </div>
+            {!readOnly && (
+              <div className="fix-actions" style={{ marginTop: '0.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '0.5rem' }}>
+                <button 
+                  className="apply-btn" 
+                  onClick={() => onApplyFix(fix.node_id)}
+                  disabled={isApplying}
+                >
+                  Apply Fix
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>
