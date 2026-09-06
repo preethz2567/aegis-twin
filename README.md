@@ -4,7 +4,6 @@
 
 By leveraging an autonomous attacker agent, AEGIS-TWIN calculates and visualizes the path of least resistance through a network to a designated "Crown Jewel" target, allowing security teams to remediate structural vulnerabilities before they are exploited.
 
--
 
 ##  Features
 
@@ -14,7 +13,6 @@ By leveraging an autonomous attacker agent, AEGIS-TWIN calculates and visualizes
 - **Risk Scoring & Hop Analysis**: Evaluates the cumulative risk of a successful breach and displays the exact hop-by-hop sequence an attacker would take.
 - **Professional Security Aesthetic**: Clean, dark-themed UI optimized for projector legibility and NOC (Network Operations Center) environments.
 
--
 
 ## Tech Stack
 
@@ -28,7 +26,6 @@ By leveraging an autonomous attacker agent, AEGIS-TWIN calculates and visualizes
 - **NetworkX** (Graph modeling and shortest-path calculation)
 - **Uvicorn** (ASGI server)
 
--
 
 ## Getting Started
 
@@ -67,7 +64,6 @@ npm run dev
 ```
 *Navigate to `http://localhost:5173` in your browser.*
 
--
 
 ##  Usage
 
