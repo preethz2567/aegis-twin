@@ -41,7 +41,7 @@ The system answers a question that every security team faces but rarely has the 
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        React Frontend                        │
+│                        React Frontend                       │
 │  TwinGraph (force-sim)  │  Panels  │  History  │  Profiles  │
 └──────────────────────────────┬──────────────────────────────┘
                                │ REST / JSON
