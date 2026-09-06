@@ -1,14 +1,14 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from pydantic import BaseModel
-from typing import Optional, Any
+from typing import Optional, Any, List, Dict
 from twin import TwinGraph
 from attacker_agent import find_highest_risk_path
 from optimizer import recommend_fixes
 import json
 
-from db import init_db, get_db_session, Assessment
+from db import init_db, get_db_session, Assessment, NetworkProfile
 from sqlalchemy.orm import Session
 
 import os
@@ -40,6 +40,14 @@ class AssessmentCreate(BaseModel):
     attack_path: dict
     fix_recommendations: dict
     explanation: str
+
+class ProfileCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    topology_json: dict
+
+class GenerateLargeRequest(BaseModel):
+    node_count: Optional[int] = 100
 
 app.add_middleware(
     CORSMiddleware,
@@ -119,13 +127,18 @@ def create_assessment(request: AssessmentCreate, db: Session = Depends(get_db_se
     orig_risk = request.attack_path.get("risk_score", 0.0)
     proj_risk = request.fix_recommendations.get("projected_risk_score", 0.0)
     
+    # Try to get active profile name for the assessment
+    active_profile = db.query(NetworkProfile).filter(NetworkProfile.is_active == True).first()
+    profile_name = active_profile.name if active_profile else "default"
+    
     new_assessment = Assessment(
         name=request.name,
         attack_path_json=json.dumps(request.attack_path),
         fix_recommendations_json=json.dumps(request.fix_recommendations),
         explanation_text=request.explanation,
         original_risk_score=orig_risk,
-        projected_risk_score=proj_risk
+        projected_risk_score=proj_risk,
+        network_profile_name=profile_name
     )
     db.add(new_assessment)
     db.commit()
@@ -141,7 +154,8 @@ def list_assessments(db: Session = Depends(get_db_session)):
             "name": a.name,
             "created_at": a.created_at,
             "original_risk_score": a.original_risk_score,
-            "projected_risk_score": a.projected_risk_score
+            "projected_risk_score": a.projected_risk_score,
+            "network_profile_name": a.network_profile_name
         } for a in assessments
     ]
 
@@ -149,7 +163,7 @@ def list_assessments(db: Session = Depends(get_db_session)):
 def get_assessment(id: int, db: Session = Depends(get_db_session)):
     a = db.query(Assessment).filter(Assessment.id == id).first()
     if not a:
-        return Response(status_code=404)
+        raise HTTPException(status_code=404, detail="Assessment not found")
     return {
         "id": a.id,
         "name": a.name,
@@ -169,3 +183,90 @@ def delete_assessment(id: int, db: Session = Depends(get_db_session)):
         db.delete(a)
         db.commit()
     return {"status": "success"}
+
+@app.get("/api/profiles")
+def list_profiles(db: Session = Depends(get_db_session)):
+    profiles = db.query(NetworkProfile).order_by(NetworkProfile.created_at.desc()).all()
+    return [
+        {
+            "id": p.id,
+            "name": p.name,
+            "description": p.description,
+            "node_count": p.node_count,
+            "is_active": p.is_active,
+            "created_at": p.created_at
+        } for p in profiles
+    ]
+
+@app.post("/api/profiles")
+def create_profile(request: ProfileCreate, db: Session = Depends(get_db_session)):
+    topology = request.topology_json
+    if not isinstance(topology, dict) or 'nodes' not in topology or 'edges' not in topology:
+        raise HTTPException(status_code=400, detail="Invalid topology format. Must contain 'nodes' and 'edges' arrays.")
+    if not isinstance(topology['nodes'], list) or not isinstance(topology['edges'], list):
+        raise HTTPException(status_code=400, detail="Invalid topology format. 'nodes' and 'edges' must be arrays.")
+        
+    new_profile = NetworkProfile(
+        name=request.name,
+        description=request.description,
+        topology_json=json.dumps(topology),
+        node_count=len(topology['nodes']),
+        is_active=False
+    )
+    db.add(new_profile)
+    db.commit()
+    db.refresh(new_profile)
+    return {"id": new_profile.id, "status": "success"}
+
+@app.post("/api/profiles/{id}/activate")
+def activate_profile(id: int, db: Session = Depends(get_db_session)):
+    profile = db.query(NetworkProfile).filter(NetworkProfile.id == id).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+        
+    db.query(NetworkProfile).update({NetworkProfile.is_active: False})
+    profile.is_active = True
+    db.commit()
+    
+    # Reload twin graph
+    twin_graph.load_data()
+    
+    return {"status": "success", "active_profile": profile.name}
+
+@app.delete("/api/profiles/{id}")
+def delete_profile(id: int, db: Session = Depends(get_db_session)):
+    profile = db.query(NetworkProfile).filter(NetworkProfile.id == id).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    if profile.is_active:
+        raise HTTPException(status_code=400, detail="Cannot delete the currently active profile. Please activate a different profile first.")
+        
+    db.delete(profile)
+    db.commit()
+    return {"status": "success"}
+
+@app.post("/api/profiles/generate-large")
+def generate_large_profile(request: GenerateLargeRequest, db: Session = Depends(get_db_session)):
+    from generate_large_network import generate_network_json
+    
+    topology = generate_network_json(request.node_count)
+    
+    new_profile = NetworkProfile(
+        name=f"Enterprise-Scale Network ({request.node_count} nodes)",
+        description=f"Auto-generated synthetic network with {request.node_count} nodes.",
+        topology_json=json.dumps(topology),
+        node_count=len(topology['nodes']),
+        is_active=False
+    )
+    db.add(new_profile)
+    db.commit()
+    db.refresh(new_profile)
+    
+    return {
+        "id": new_profile.id, 
+        "name": new_profile.name,
+        "description": new_profile.description,
+        "node_count": new_profile.node_count,
+        "is_active": new_profile.is_active,
+        "created_at": new_profile.created_at
+    }

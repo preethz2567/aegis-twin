@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TwinGraph from '../components/TwinGraph';
 import AttackPathPanel from '../components/AttackPathPanel';
 import FixRecommendationsPanel from '../components/FixRecommendationsPanel';
 import ExplanationPanel from '../components/ExplanationPanel';
-import { fetchAttackPath, fetchOptimizePath, fetchExplain, applyFix, resetSimulation, generateReport, saveAssessment } from '../api';
+import { fetchAttackPath, fetchOptimizePath, fetchExplain, applyFix, resetSimulation, generateReport, saveAssessment, getProfiles } from '../api';
 import '../index.css';
 
 function DashboardPage() {
@@ -20,6 +20,24 @@ function DashboardPage() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [errorMsg, setErrorMsg] = useState('');
   const [isSecured, setIsSecured] = useState(false);
+  const [activeProfileName, setActiveProfileName] = useState('Loading...');
+
+  useEffect(() => {
+    const fetchActiveProfile = async () => {
+      try {
+        const profiles = await getProfiles();
+        const active = profiles.find(p => p.is_active);
+        if (active) {
+          setActiveProfileName(active.name);
+        } else {
+          setActiveProfileName('Default Demo Network');
+        }
+      } catch (err) {
+        setActiveProfileName('Unknown Network');
+      }
+    };
+    fetchActiveProfile();
+  }, []);
 
   const handleSimulate = async () => {
     setIsSimulating(true);
@@ -156,7 +174,7 @@ function DashboardPage() {
         <div className="header-content">
           <div>
             <h1>AEGIS-TWIN Dashboard</h1>
-            <p>Live Network Threat Topology</p>
+            <p>Live Network Twin — {activeProfileName}</p>
           </div>
           <div className="header-actions">
              <button 

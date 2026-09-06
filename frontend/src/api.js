@@ -116,3 +116,61 @@ export const deleteAssessment = async (id) => {
   }
   return response.json();
 };
+
+export const getProfiles = async () => {
+  const response = await fetch('http://localhost:8000/api/profiles');
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
+export const createProfile = async (name, description, topology_json) => {
+  const response = await fetch('http://localhost:8000/api/profiles', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name, description, topology_json }),
+  });
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.detail || `HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
+export const activateProfile = async (id) => {
+  const response = await fetch(`http://localhost:8000/api/profiles/${id}/activate`, {
+    method: 'POST',
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
+export const deleteProfile = async (id) => {
+  const response = await fetch(`http://localhost:8000/api/profiles/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.detail || `HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
+export const generateLargeProfile = async (nodeCount = 100) => {
+  const response = await fetch('http://localhost:8000/api/profiles/generate-large', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ node_count: nodeCount }),
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};

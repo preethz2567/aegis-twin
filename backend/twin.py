@@ -14,10 +14,30 @@ class TwinGraph:
         self.graph = nx.DiGraph()
         self.load_data(self.data_path)
 
-    def load_data(self, data_path: str):
+    def load_data(self, data_path: str = None):
         self.graph.clear()
-        with open(data_path, 'r') as f:
-            data = json.load(f)
+        
+        # Try to load from DB active profile
+        from db import SessionLocal, NetworkProfile
+        import json
+        
+        db = SessionLocal()
+        data = None
+        try:
+            active_profile = db.query(NetworkProfile).filter(NetworkProfile.is_active == True).first()
+            if active_profile and active_profile.topology_json:
+                data = json.loads(active_profile.topology_json)
+        except Exception as e:
+            print(f"Failed to load from DB: {e}")
+        finally:
+            db.close()
+            
+        if not data:
+            # Fallback to file
+            path_to_load = data_path or self.data_path
+            with open(path_to_load, 'r') as f:
+                data = json.load(f)
+                
             
         for node in data.get('nodes', []):
             node_id = node.pop('id')
