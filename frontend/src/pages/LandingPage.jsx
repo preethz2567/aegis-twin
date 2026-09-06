@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Network, Target, ListChecks, MessageSquare, Terminal } from 'lucide-react';
+import { Network, Target, ListChecks, MessageSquare } from 'lucide-react';
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -14,10 +14,10 @@ function LandingPage() {
 
       <div className="landing-content v-content">
         
-        {/* HERO SECTION */}
-        <section className="v-hero">
+        {/* SECTION 1 — Hero */}
+        <section className="v-section v-hero">
+          <div className="v-pill-badge">We Hack 5.0 Finalist</div>
           <h1 className="v-title">AEGIS-TWIN</h1>
-          <h2 className="v-subtitle">Autonomous Digital Twin for Adversarial Path Simulation & Optimal Defense Orchestration</h2>
           <p className="v-description">
             AEGIS-TWIN helps security analysts see which vulnerability actually matters most — by simulating how an attacker would move through the network, then recommending the fixes that block the most damage.
           </p>
@@ -26,15 +26,13 @@ function LandingPage() {
               Launch Dashboard
             </button>
             <a href="https://github.com/placeholder/aegis-twin" target="_blank" rel="noreferrer" className="v-btn v-btn-ghost">
-              View Documentation
+              View on GitHub
             </a>
           </div>
         </section>
 
-        <hr className="v-divider" />
-
-        {/* PROBLEM SECTION */}
-        <section className="v-problem">
+        {/* SECTION 2 — Problem */}
+        <section className="v-section v-problem">
           <div className="v-problem-text">
             <span className="v-eyebrow">THE PROBLEM</span>
             <h3 className="v-headline">A single compromised component can expose thousands of systems.</h3>
@@ -51,10 +49,8 @@ function LandingPage() {
           </div>
         </section>
 
-        <hr className="v-divider" />
-
-        {/* TERMINAL MOCKUP SECTION */}
-        <section className="v-terminal-section">
+        {/* SECTION 3 — Terminal mockup */}
+        <section className="v-section v-terminal-section">
           <div className="v-terminal-window">
             <div className="v-terminal-header">
               <div className="v-terminal-dots">
@@ -86,46 +82,45 @@ function LandingPage() {
           </div>
         </section>
 
-        <hr className="v-divider" />
-
-        {/* FEATURES SECTION */}
-        <section className="v-features">
+        {/* SECTION 4 — Feature cards */}
+        <section className="v-section v-features">
           <div className="v-feature-card">
-            <Network className="v-feature-icon" size={32} />
+            <Network className="v-feature-icon" size={28} />
             <h3>Map</h3>
             <p>Visualize your live network threat topology and crown jewels.</p>
           </div>
           <div className="v-feature-card">
-            <Target className="v-feature-icon" size={32} />
+            <Target className="v-feature-icon" size={28} />
             <h3>Simulate</h3>
             <p>Uncover the highest-risk attack paths through your infrastructure.</p>
           </div>
           <div className="v-feature-card">
-            <ListChecks className="v-feature-icon" size={32} />
+            <ListChecks className="v-feature-icon" size={28} />
             <h3>Optimize</h3>
             <p>Compute the most effective fixes to cut risk with minimal effort.</p>
           </div>
           <div className="v-feature-card">
-            <MessageSquare className="v-feature-icon" size={32} />
+            <MessageSquare className="v-feature-icon" size={28} />
             <h3>Explain</h3>
             <p>Translate complex vulnerabilities into plain English executive summaries.</p>
           </div>
         </section>
-      </div>
 
-      {/* FOOTER */}
-      <footer className="v-footer">
-        <div className="v-footer-content">
-          <div className="v-footer-brand">
-            <strong>AEGIS-TWIN</strong>
-            <span>Built for [hackathon/track name]</span>
+        {/* SECTION 5 — Footer */}
+        <footer className="v-footer">
+          <div className="v-footer-content">
+            <div className="v-footer-brand">
+              <strong>AEGIS-TWIN</strong>
+              <span>Built for We Hack 5.0</span>
+            </div>
+            <div className="v-footer-links">
+              <a href="https://github.com/placeholder/aegis-twin" target="_blank" rel="noreferrer">GitHub</a>
+              <a href="/dashboard" onClick={(e) => { e.preventDefault(); navigate('/dashboard'); }}>Dashboard</a>
+            </div>
           </div>
-          <div className="v-footer-links">
-            <a href="https://github.com/placeholder/aegis-twin" target="_blank" rel="noreferrer">GitHub</a>
-            <a href="/dashboard" onClick={(e) => { e.preventDefault(); navigate('/dashboard'); }}>Dashboard</a>
-          </div>
-        </div>
-      </footer>
+        </footer>
+
+      </div>
     </div>
   );
 }

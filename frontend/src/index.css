@@ -875,11 +875,7 @@ body {
   z-index: 10;
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 2rem;
 }
 
 /* Background grid & glows */
@@ -918,19 +914,40 @@ body {
   background: radial-gradient(circle, rgba(244, 63, 94, 0.08), transparent 70%);
 }
 
-/* Hero Section */
+.v-section {
+  padding: 6rem 2rem;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .v-section {
+    padding: 8rem 2rem;
+  }
+}
+
+/* SECTION 1 - Hero Section */
 .v-hero {
   text-align: center;
-  padding: 120px 0 100px 0;
-  max-width: 800px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
 }
 
+.v-pill-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--v-border-faint);
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  color: var(--v-text-secondary);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
 .v-title {
-  font-size: 5rem;
+  font-size: 3.75rem;
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1.1;
@@ -940,25 +957,24 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-.v-subtitle {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: var(--v-text-primary);
-  margin: 0;
-  letter-spacing: -0.02em;
+@media (min-width: 768px) {
+  .v-title {
+    font-size: 6rem;
+  }
 }
 
 .v-description {
   font-size: 1.125rem;
   color: var(--v-text-secondary);
   line-height: 1.6;
-  max-width: 650px;
-  margin: 1rem 0 2rem 0;
+  max-width: 700px;
+  margin: 1rem 0;
 }
 
 .v-actions {
   display: flex;
   gap: 1rem;
+  justify-content: center;
 }
 
 .v-btn {
@@ -993,28 +1009,26 @@ body {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-.v-divider {
-  width: 100%;
-  border: none;
-  border-top: 1px solid var(--v-border-faint);
-  margin: 0;
+/* SECTION 2 - Problem Section */
+.v-problem {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
 }
 
-/* Problem Section */
-.v-problem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 120px 0;
-  gap: 4rem;
+@media (min-width: 768px) {
+  .v-problem {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
 }
 
 .v-problem-text {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  text-align: left;
 }
 
 .v-eyebrow {
@@ -1047,13 +1061,12 @@ body {
 }
 
 .v-problem-stat {
-  flex: 1;
-  display: flex;
-  justify-content: center;
+  width: 100%;
 }
 
 .v-stat-card {
-  padding: 3rem;
+  width: 100%;
+  padding: 2rem;
   border: 1px solid var(--v-border-faint);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.02);
@@ -1068,7 +1081,7 @@ body {
 }
 
 .v-stat-number {
-  font-size: 4rem;
+  font-size: 3.75rem;
   font-weight: 800;
   letter-spacing: -0.05em;
   background: linear-gradient(180deg, #FFFFFF 0%, #71717A 100%);
@@ -1084,22 +1097,21 @@ body {
   font-weight: 500;
 }
 
-/* Terminal Mockup */
+/* SECTION 3 - Terminal Mockup */
 .v-terminal-section {
-  width: 100%;
-  padding: 120px 0;
   display: flex;
   justify-content: center;
 }
 
 .v-terminal-window {
   width: 100%;
-  max-width: 800px;
+  max-width: 48rem; /* max-w-3xl */
   border-radius: 8px;
   border: 1px solid var(--v-border-faint);
   background-color: #0A0A0A;
   box-shadow: 0 20px 40px rgba(0,0,0,0.5);
   overflow: hidden;
+  margin: 0 auto;
 }
 
 .v-terminal-header {
@@ -1154,24 +1166,29 @@ body {
 .v-json-str { color: #2DD4BF; }
 .v-json-num { color: #FBBF24; }
 
-/* Features Section */
+/* SECTION 4 - Features Section */
 .v-features {
-  width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  padding: 120px 0;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .v-features {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .v-feature-card {
-  padding: 2rem 1.5rem;
-  border: 1px solid transparent;
-  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.5rem;
   transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 .v-feature-card:hover {
-  border-color: var(--v-border-faint);
-  background: rgba(255, 255, 255, 0.01);
+  border-color: rgba(255,255,255,0.3);
 }
 
 .v-feature-icon {
@@ -1193,12 +1210,11 @@ body {
   font-size: 0.95rem;
 }
 
-/* Footer */
+/* SECTION 5 - Footer */
 .v-footer {
   width: 100%;
-  border-top: 1px solid var(--v-border-faint);
-  padding: 2.5rem 0;
-  margin-top: auto;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 2rem 0;
 }
 
 .v-footer-content {
@@ -1212,20 +1228,20 @@ body {
 
 .v-footer-brand {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.25rem;
   color: var(--v-text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 .v-footer-brand strong {
   color: var(--v-text-primary);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.05em;
 }
 
 .v-footer-links {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 .v-footer-links a {
   color: var(--v-text-secondary);
