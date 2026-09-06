@@ -7,14 +7,26 @@ function HistoryPage() {
   const [assessments, setAssessments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isBackendDown, setIsBackendDown] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
+
+  const handleError = (err, defaultMsg) => {
+    if (err.message === 'BACKEND_NOT_REACHABLE') {
+      setIsBackendDown(true);
+      setErrorMsg('Backend not reachable: Please ensure the server is running on port 8000.');
+    } else {
+      setErrorMsg(defaultMsg + (err.message ? ` (${err.message})` : ''));
+    }
+  };
 
   const fetchHistory = async () => {
     setIsLoading(true);
+    setIsBackendDown(false);
     try {
       const data = await getAssessments();
       setAssessments(data);
     } catch (err) {
-      setErrorMsg('Failed to load assessment history.');
+      handleError(err, 'Failed to load assessment history.');
     } finally {
       setIsLoading(false);
     }
@@ -29,11 +41,19 @@ function HistoryPage() {
     e.stopPropagation();
     if (!window.confirm("Delete this assessment?")) return;
     
+    setDeletingId(id);
     try {
       await deleteAssessment(id);
       setAssessments(prev => prev.filter(a => a.id !== id));
     } catch (err) {
-      alert("Failed to delete assessment.");
+      if (err.message === 'BACKEND_NOT_REACHABLE') {
+        setIsBackendDown(true);
+        setErrorMsg('Backend not reachable: Please ensure the server is running on port 8000.');
+      } else {
+        setErrorMsg('Failed to delete assessment.');
+      }
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -47,11 +67,20 @@ function HistoryPage() {
 
   return (
     <div className="page-container" style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+      {isBackendDown && (
+        <div style={{
+          background: '#2d1b1b', border: '1px solid #ff4d4f', borderRadius: '6px',
+          padding: '0.75rem 1rem', marginBottom: '1.5rem', color: '#ff4d4f',
+          display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem'
+        }}>
+          ⚠️ <strong>Backend not reachable</strong> — Please ensure the server is running on port 8000.
+        </div>
+      )}
       <h2 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <History size={24} /> Assessment History
       </h2>
       
-      {errorMsg && <div className="error-text" style={{ marginBottom: '1rem' }}>{errorMsg}</div>}
+      {errorMsg && !isBackendDown && <div className="error-text" style={{ marginBottom: '1rem' }}>{errorMsg}</div>}
       
       {isLoading ? (
         <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>Loading...</div>
@@ -88,12 +117,13 @@ function HistoryPage() {
                 </div>
                 <button 
                   onClick={(e) => handleDelete(e, assessment.id)}
-                  style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.25rem' }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#ff4d4f'}
+                  disabled={deletingId === assessment.id}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: deletingId === assessment.id ? 'wait' : 'pointer', padding: '0.25rem', opacity: deletingId === assessment.id ? 0.5 : 1 }}
+                  onMouseEnter={(e) => { if (deletingId !== assessment.id) e.currentTarget.style.color = '#ff4d4f'; }}
                   onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
                   title="Delete Assessment"
                 >
-                  <Trash2 size={18} />
+                  {deletingId === assessment.id ? '...' : <Trash2 size={18} />}
                 </button>
               </div>
               

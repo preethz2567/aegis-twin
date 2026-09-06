@@ -1,6 +1,6 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
 from pydantic import BaseModel
 from typing import Optional, Any, List, Dict
 from twin import TwinGraph
@@ -13,12 +13,23 @@ from sqlalchemy.orm import Session
 
 import os
 from dotenv import load_dotenv
+import traceback
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 env_path = os.path.join(current_dir, '.env')
 load_dotenv(dotenv_path=env_path)
 
 app = FastAPI(title="AEGIS-TWIN API")
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    # Log the full traceback to the server console for debugging
+    traceback.print_exc()
+    # Return a clean JSON response instead of a raw traceback to the client
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"An unexpected error occurred: {str(exc)}"}
+    )
 
 @app.on_event("startup")
 def startup_event():
@@ -59,12 +70,18 @@ app.add_middleware(
 
 twin_graph = TwinGraph()
 
+@app.get("/api/health")
+def health_check():
+    return {"status": "ok"}
+
 @app.get("/api/twin")
 def get_twin_state():
     return twin_graph.get_graph_state()
 
 @app.get("/api/simulate/attack-path")
 def simulate_attack_path():
+    if not twin_graph.graph.nodes:
+        raise HTTPException(status_code=400, detail="No active network loaded or network is empty.")
     return find_highest_risk_path(twin_graph.graph)
 
 @app.get("/api/simulate/optimize")
@@ -98,6 +115,8 @@ def simulate_explain():
 
 @app.post("/api/apply-fix")
 def apply_fix(request: FixRequest):
+    if request.node_id not in twin_graph.graph.nodes:
+        raise HTTPException(status_code=404, detail=f"Node '{request.node_id}' not found in current network.")
     twin_graph.apply_fix(request.node_id)
     return {"status": "success", "fixed_node": request.node_id}
 

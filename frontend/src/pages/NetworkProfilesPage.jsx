@@ -6,16 +6,30 @@ function NetworkProfilesPage() {
   const [profiles, setProfiles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isBackendDown, setIsBackendDown] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [activatingId, setActivatingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+
+  const handleError = (err, defaultMsg) => {
+    if (err.message === 'BACKEND_NOT_REACHABLE') {
+      setIsBackendDown(true);
+      setErrorMsg('Backend not reachable: Please ensure the server is running on port 8000.');
+    } else {
+      setErrorMsg(defaultMsg + (err.message ? ` (${err.message})` : ''));
+    }
+  };
 
   const fetchAllProfiles = async () => {
     setIsLoading(true);
+    setIsBackendDown(false);
     try {
       const data = await getProfiles();
       setProfiles(data);
+      setErrorMsg('');
     } catch (err) {
-      setErrorMsg('Failed to load network profiles.');
+      handleError(err, 'Failed to load network profiles.');
     } finally {
       setIsLoading(false);
     }
@@ -26,6 +40,8 @@ function NetworkProfilesPage() {
   }, []);
 
   const handleActivate = async (id) => {
+    setActivatingId(id);
+    setErrorMsg('');
     try {
       await activateProfile(id);
       // Update local state to reflect active status
@@ -34,18 +50,24 @@ function NetworkProfilesPage() {
         is_active: p.id === id
       })));
     } catch (err) {
-      alert("Failed to activate profile.");
+      handleError(err, 'Failed to activate profile.');
+    } finally {
+      setActivatingId(null);
     }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this network profile?")) return;
     
+    setDeletingId(id);
+    setErrorMsg('');
     try {
       await deleteProfile(id);
       setProfiles(prev => prev.filter(p => p.id !== id));
     } catch (err) {
-      alert(err.message || "Failed to delete profile.");
+      handleError(err, 'Failed to delete profile.');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -54,16 +76,17 @@ function NetworkProfilesPage() {
     if (!countStr) return;
     const count = parseInt(countStr, 10);
     if (isNaN(count) || count < 10) {
-      alert("Please enter a valid number (minimum 10).");
+      setErrorMsg("Please enter a valid number (minimum 10).");
       return;
     }
 
     setIsGenerating(true);
+    setErrorMsg('');
     try {
       await generateLargeProfile(count);
       await fetchAllProfiles(); // Refresh list to get new profile
     } catch (err) {
-      alert("Failed to generate large network.");
+      handleError(err, 'Failed to generate large network.');
     } finally {
       setIsGenerating(false);
     }
@@ -74,6 +97,7 @@ function NetworkProfilesPage() {
     if (!file) return;
 
     setIsUploading(true);
+    setErrorMsg('');
     try {
       const text = await file.text();
       const json = JSON.parse(text);
@@ -84,7 +108,7 @@ function NetworkProfilesPage() {
       await createProfile(name, "User uploaded custom topology", json);
       await fetchAllProfiles(); // Refresh list
     } catch (err) {
-      alert(`Upload failed: ${err.message || 'Invalid JSON format'}`);
+      handleError(err, 'Upload failed — ensure the file is valid JSON with nodes and edges arrays.');
     } finally {
       setIsUploading(false);
       e.target.value = null; // reset input
@@ -125,7 +149,17 @@ function NetworkProfilesPage() {
         </div>
       </header>
 
-      {errorMsg && <div className="error-text" style={{ marginBottom: '1rem' }}>{errorMsg}</div>}
+      {isBackendDown && (
+        <div style={{
+          background: '#2d1b1b', border: '1px solid #ff4d4f', borderRadius: '6px',
+          padding: '0.75rem 1rem', marginBottom: '1.5rem', color: '#ff4d4f',
+          display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem'
+        }}>
+          ⚠️ <strong>Backend not reachable</strong> — Please ensure the server is running on port 8000.
+        </div>
+      )}
+
+      {errorMsg && !isBackendDown && <div className="error-text" style={{ marginBottom: '1rem' }}>{errorMsg}</div>}
 
       {isLoading ? (
         <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>Loading profiles...</div>
@@ -177,13 +211,15 @@ function NetworkProfilesPage() {
                 {!profile.is_active ? (
                   <button 
                     onClick={() => handleActivate(profile.id)}
+                    disabled={activatingId === profile.id || deletingId === profile.id}
                     style={{ 
                       background: 'rgba(45,225,194,0.1)', border: '1px solid var(--accent-color)', 
                       color: 'var(--accent-color)', padding: '6px 12px', borderRadius: '4px',
-                      cursor: 'pointer', fontSize: '0.85rem', fontWeight: '500'
+                      cursor: activatingId === profile.id ? 'wait' : 'pointer', fontSize: '0.85rem', fontWeight: '500',
+                      opacity: activatingId === profile.id ? 0.7 : 1
                     }}
                   >
-                    Activate
+                    {activatingId === profile.id ? 'Activating...' : 'Activate'}
                   </button>
                 ) : (
                   <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Currently running</span>
@@ -192,10 +228,11 @@ function NetworkProfilesPage() {
                 {!profile.is_active && (
                   <button 
                     onClick={() => handleDelete(profile.id)}
-                    style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px' }}
+                    disabled={deletingId === profile.id || activatingId === profile.id}
+                    style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: deletingId === profile.id ? 'wait' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px', opacity: deletingId === profile.id ? 0.5 : 1 }}
                     title="Delete Profile"
                   >
-                    <Trash2 size={18} />
+                    {deletingId === profile.id ? '...' : <Trash2 size={18} />}
                   </button>
                 )}
               </div>

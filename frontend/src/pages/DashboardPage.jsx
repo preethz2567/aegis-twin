@@ -21,6 +21,7 @@ function DashboardPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [isSecured, setIsSecured] = useState(false);
   const [activeProfileName, setActiveProfileName] = useState('Loading...');
+  const [isBackendDown, setIsBackendDown] = useState(false);
 
   useEffect(() => {
     const fetchActiveProfile = async () => {
@@ -39,9 +40,20 @@ function DashboardPage() {
     fetchActiveProfile();
   }, []);
 
+  const handleError = (err, defaultMsg) => {
+    if (err.message === 'BACKEND_NOT_REACHABLE') {
+      setIsBackendDown(true);
+      setErrorMsg('Backend not reachable: Please ensure the server is running on port 8000.');
+    } else {
+      setIsBackendDown(false);
+      setErrorMsg(defaultMsg + (err.message ? ` (${err.message})` : ''));
+    }
+  };
+
   const handleSimulate = async () => {
     setIsSimulating(true);
     setErrorMsg('');
+    setIsBackendDown(false);
     setOptimizeData(null);
     setExplainData(null);
     setIsSecured(false);
@@ -54,7 +66,7 @@ function DashboardPage() {
         setAttackData(data);
       }
     } catch (err) {
-      setErrorMsg('Failed to run simulation.');
+      handleError(err, 'Failed to run simulation.');
       setAttackData(null);
     } finally {
       setIsSimulating(false);
@@ -87,7 +99,7 @@ function DashboardPage() {
         });
       }
     } catch (err) {
-      setErrorMsg('Failed to run optimization.');
+      handleError(err, 'Failed to run optimization.');
       setIsExplaining(false);
     } finally {
       setIsOptimizing(false);
@@ -104,7 +116,7 @@ function DashboardPage() {
         handleOptimize();
       }, 300);
     } catch (err) {
-      setErrorMsg('Failed to apply fix.');
+      handleError(err, 'Failed to apply fix.');
     } finally {
       setIsApplying(false);
     }
@@ -120,7 +132,7 @@ function DashboardPage() {
       setIsSecured(false);
       setErrorMsg('');
     } catch (err) {
-      setErrorMsg('Failed to reset simulation.');
+      handleError(err, 'Failed to reset simulation.');
     }
   };
 
@@ -141,7 +153,7 @@ function DashboardPage() {
       a.remove();
       URL.revokeObjectURL(url);
     } catch (err) {
-      setErrorMsg('Failed to generate report.');
+      handleError(err, 'Failed to generate report.');
     } finally {
       setIsGeneratingReport(false);
     }
@@ -162,7 +174,7 @@ function DashboardPage() {
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 2000);
     } catch (err) {
-      setErrorMsg('Failed to save assessment.');
+      handleError(err, 'Failed to save assessment.');
     } finally {
       setIsSaving(false);
     }
@@ -227,10 +239,20 @@ function DashboardPage() {
                </>
              )}
              
-             {errorMsg && <span className="error-text">{errorMsg}</span>}
+             {errorMsg && !isBackendDown && <span className="error-text">{errorMsg}</span>}
           </div>
         </div>
       </header>
+
+      {isBackendDown && (
+        <div style={{
+          background: '#2d1b1b', border: '1px solid #ff4d4f', borderRadius: '6px',
+          padding: '0.75rem 1.5rem', margin: '0 1.5rem 1rem',
+          color: '#ff4d4f', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem'
+        }}>
+          ⚠️ <strong>Backend not reachable</strong> — Please ensure the server is running on port 8000. Then try your action again.
+        </div>
+      )}
       <main className="app-main">
         <TwinGraph 
           attackPath={attackData?.path} 

@@ -5,6 +5,7 @@ import DashboardPage from './pages/DashboardPage';
 import HistoryPage from './pages/HistoryPage';
 import HistoryDetailPage from './pages/HistoryDetailPage';
 import NetworkProfilesPage from './pages/NetworkProfilesPage';
+import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
 
 function App() {
@@ -13,13 +14,15 @@ function App() {
       <div className="app-root">
         <NavBar />
         <div className="page-content">
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/history" element={<HistoryPage />} />
-            <Route path="/history/:id" element={<HistoryDetailPage />} />
-            <Route path="/profiles" element={<NetworkProfilesPage />} />
-          </Routes>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/history" element={<HistoryPage />} />
+              <Route path="/history/:id" element={<HistoryDetailPage />} />
+              <Route path="/profiles" element={<NetworkProfilesPage />} />
+            </Routes>
+          </ErrorBoundary>
         </div>
       </div>
     </Router>

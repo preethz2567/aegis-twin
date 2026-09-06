@@ -12,6 +12,7 @@ function HistoryDetailPage() {
   const [assessment, setAssessment] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isBackendDown, setIsBackendDown] = useState(false);
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -19,7 +20,12 @@ function HistoryDetailPage() {
         const data = await getAssessment(id);
         setAssessment(data);
       } catch (err) {
-        setErrorMsg('Failed to load assessment details.');
+        if (err.message === 'BACKEND_NOT_REACHABLE') {
+          setIsBackendDown(true);
+          setErrorMsg('Backend not reachable: Please ensure the server is running on port 8000.');
+        } else {
+          setErrorMsg('Failed to load assessment details.');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -37,6 +43,22 @@ function HistoryDetailPage() {
 
   if (isLoading) {
     return <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading assessment...</div>;
+  }
+
+  if (isBackendDown) {
+    return (
+      <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+        <Link to="/history" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-color)', textDecoration: 'none', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+          <ArrowLeft size={16} /> Back to History
+        </Link>
+        <div style={{
+          background: '#2d1b1b', border: '1px solid #ff4d4f', borderRadius: '6px',
+          padding: '0.75rem 1rem', color: '#ff4d4f', display: 'flex', alignItems: 'center', gap: '0.5rem'
+        }}>
+          ⚠️ <strong>Backend not reachable</strong> — Please ensure the server is running on port 8000.
+        </div>
+      </div>
+    );
   }
 
   if (errorMsg || !assessment) {
