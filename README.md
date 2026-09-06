@@ -9,11 +9,9 @@
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-> **We Hack 5.0 Finalist** — AI-Driven Cybersecurity Track
 
 </div>
 
----
 
 ## Overview
 
@@ -23,7 +21,6 @@ The system answers a question that every security team faces but rarely has the 
 
 > *"If an attacker were in our network right now, exactly which path would they take to reach our crown jewels — and what is the single most cost-effective sequence of fixes to cut off that path?"*
 
----
 
 ## Key Features
 
@@ -39,7 +36,6 @@ The system answers a question that every security team faces but rarely has the 
 | **Real CVE Data** | CVE scores sourced from the NVD public API and cached locally |
 | **Force-Directed Visualisation** | Live physics simulation renders the network graph in-browser with attack path and fix highlights |
 
----
 
 ## Architecture
 
@@ -50,26 +46,26 @@ The system answers a question that every security team faces but rarely has the 
 └──────────────────────────────┬──────────────────────────────┘
                                │ REST / JSON
 ┌──────────────────────────────▼──────────────────────────────┐
-│                      FastAPI Backend                         │
-│                                                              │
+│                      FastAPI Backend                        │
+│                                                             │
 │  ┌─────────────┐  ┌────────────────┐  ┌──────────────────┐  │
 │  │ TwinGraph   │  │ AttackerAgent  │  │   Optimizer      │  │
 │  │ (NetworkX   │→ │ (Dijkstra on   │→ │ (Greedy Fix      │  │
 │  │  DiGraph)   │  │  inv. weights) │  │  Selector)       │  │
 │  └─────────────┘  └────────────────┘  └──────────────────┘  │
-│         │                                      │             │
+│         │                                      │            │
 │  ┌──────▼──────────────────────────────────────▼───────┐    │
-│  │              SQLite (SQLAlchemy ORM)                 │    │
-│  │   network_profiles table │ assessments table         │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                             │                                │
+│  │              SQLite (SQLAlchemy ORM)                 │   │
+│  │   network_profiles table │ assessments table         │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                             │                               │
 │  ┌──────────────────────────▼──────────────────────────┐    │
 │  │  Explain Layer (Anthropic Claude)  │  Report (PDF)  │    │
 │  └─────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
+
 
 ## Algorithms
 
@@ -104,7 +100,7 @@ A Fruchterman-Reingold-style physics engine runs in-browser:
 - **Attraction:** edges act as springs pulling connected nodes together
 - The layout converges to a stable equilibrium each render cycle
 
----
+
 
 ## Technology Stack
 
@@ -119,7 +115,7 @@ A Fruchterman-Reingold-style physics engine runs in-browser:
 | CVE Data | NIST NVD Public API (cached) |
 | Visualisation | Custom SVG + browser physics simulation |
 
----
+
 
 ## Project Structure
 
@@ -158,7 +154,7 @@ aegis-twin/
             └── NetworkProfilesPage.jsx
 ```
 
----
+
 
 ## Getting Started
 
@@ -195,7 +191,7 @@ npm run dev
 
 Open **http://localhost:5173** — the app redirects to the Dashboard immediately.
 
----
+
 
 ## API Reference
 
@@ -219,7 +215,7 @@ Open **http://localhost:5173** — the app redirects to the Dashboard immediatel
 | `DELETE` | `/api/profiles/{id}` | Delete a profile |
 | `POST` | `/api/profiles/generate-large` | Generate a synthetic large-scale network |
 
----
+
 
 ## Demo Walkthrough
 
@@ -231,7 +227,7 @@ Open **http://localhost:5173** — the app redirects to the Dashboard immediatel
 6. **Network Profiles** — Upload a custom `network.json`, generate a 100-node synthetic enterprise network, or switch between topologies — the live graph updates instantly
 7. **Generate Report** — Export a complete PDF summary of the assessment
 
----
+
 
 ## Network Topology Format
 
@@ -261,7 +257,7 @@ Custom topologies can be uploaded as JSON following this schema:
 **Target:** the node with `"crown_jewel": true` (or the first `database` node)  
 **Risk weight:** edge traversal risk on a 0–10 scale
 
----
+
 
 ## Resilience & Error Handling
 
@@ -271,16 +267,16 @@ Custom topologies can be uploaded as JSON following this schema:
 - **Double-click prevention** — all action buttons disable themselves during in-flight requests
 - **Active profile protection** — the currently active network profile cannot be deleted
 
----
+
 
 ## Team
 
 Built at **We Hack 5.0** · AI-Driven Cybersecurity Track
 
----
+
 
 <div align="center">
 
-*AEGIS-TWIN — Know your network before the attacker does.*
+*AEGIS-TWIN - Know your network before the attacker does.*
 
 </div>
