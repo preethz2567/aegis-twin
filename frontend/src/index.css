@@ -1253,3 +1253,62 @@ body {
   color: var(--v-text-primary);
 }
 
+/* Spotlight Effect */
+.spotlight-card-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+.spotlight-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+.v-feature-card-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Animated Background Mesh */
+.v-bg-moving-mesh {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(at 40% 20%, rgba(56, 189, 248, 0.1) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(244, 63, 94, 0.08) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(244, 63, 94, 0.08) 0px, transparent 50%);
+  filter: blur(100px);
+  animation: meshMove 20s infinite alternate linear;
+  z-index: 0;
+  pointer-events: none;
+}
+@keyframes meshMove {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.1) translate(3%, 3%); }
+}
+
+/* Button Glow */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+.btn-glow::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+  transform: rotate(45deg) translateY(-100%);
+  transition: transform 0.6s ease;
+}
+.btn-glow:hover::after {
+  transform: rotate(45deg) translateY(100%);
+}
+
